@@ -1,0 +1,358 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+// Node structure representing an element in the singly linked list
+struct Node {
+    int number;            // Data stored in the node
+    Node* next = NULL;     // Pointer to the next node
+};
+
+// Add a node with the given value at the front of the list
+void add_front(Node* &head, int value) {
+    Node* n = new Node();
+    n->number = value;
+
+    if (head == NULL) {
+        head = n;  // If list is empty, make this node the head
+    } else {
+        n->next = head;  // Link new node to current head
+        head = n;        // Update head to the new node
+    }
+}
+
+// Add a node with the given value at the back of the list
+void add_back(Node* &head, int value) {
+    Node* n = new Node();
+    n->number = value;
+    n->next = NULL;
+
+    if (head == NULL) {
+        head = n;  // If list is empty, make this node the head
+        return;
+    }
+
+    Node* temp = head;
+    while (temp->next != NULL) {  // Traverse to the last node
+        temp = temp->next;
+    }
+    temp->next = n;  // Link the last node to the new node
+}
+
+// Insert a node with the given value at a specific position in the list
+void insert_value(Node* &head, int value, int place) {
+    Node* n = new Node();
+    n->number = value;
+
+    if (place == 1) {
+        n->next = head;  // Insert at the beginning
+        head = n;
+        return;
+    }
+
+    Node* temp = head;
+    while (--place > 1 && temp != nullptr) {  // Traverse to the desired position
+        temp = temp->next;
+    }
+
+    n->next = temp->next;  // Insert the new node
+    temp->next = n;
+}
+
+// Return the size of the list
+int size_list(Node* &head) {
+    Node* temp = head;
+    int count = 0;
+
+    while (temp != nullptr) {
+        count++;           // Increment count for each node
+        temp = temp->next; // Move to the next node
+    }
+
+    return count;
+}
+
+// Delete all occurrences of a specific value from the list
+void delete_value(Node* &head, int value) {
+    // Remove nodes with the target value at the beginning
+    while (head != nullptr && head->number == value) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;  // Free memory
+    }
+
+    Node* temp = head;
+    while (temp != nullptr && temp->next != nullptr) {
+        if (temp->next->number == value) {
+            Node* br = temp->next;
+            temp->next = temp->next->next;  // Bypass the target node
+            delete br;
+        } else {
+            temp = temp->next;  // Move to the next node
+        }
+    }
+}
+
+// Print all elements of the list
+void print_list(Node* &head) {
+    Node* temp = head;
+
+    while (temp != NULL) {
+        cout << temp->number << " ";  // Print the data in the node
+        temp = temp->next;
+    }
+    cout << "\n";  // End the line after printing all nodes
+    return;
+}
+
+// Average of all elements in the list
+double average_list(Node* &head) {
+    Node* temp = head;
+    int count = size_list(temp);  // Total number of nodes
+    double sum = 0;
+
+    while (temp != nullptr) {
+        sum += temp->number;      // Add the value of each node
+        temp = temp->next;
+    }
+
+    return (sum / count);  // Return the average
+}
+
+// Find the median value in the list
+double median_list(Node* &head) {
+    Node* temp = head;
+    int median_order = (size_list(temp) / 2) + 1; // Position of the median
+    double median;
+
+    while (median_order--) { // Traverse to the median position
+        median = temp->number;
+        temp = temp->next;
+    }
+
+    return median;
+}
+
+// Find the maximum value in the list
+double max_list(Node* &head) {
+    Node* temp = head;
+    double max_element = INT_MIN;
+
+    while (temp != nullptr) {
+        if (max_element < temp->number) { // Update max if a larger value is found
+            max_element = temp->number;
+        }
+        temp = temp->next;
+    }
+
+    return max_element;
+}
+
+// Find the second largest value in the list
+double max_2nd_list(Node* &head) {
+    Node* temp = head;
+    double max_element = INT_MIN;
+    double max2_element = INT_MIN;
+
+    while (temp != nullptr) {
+        if (max_element < temp->number) { // Update first and second max values
+            max2_element = max_element;
+            max_element = temp->number;
+        }
+        temp = temp->next;
+    }
+
+    return max2_element;
+}
+
+// Find the minimum value in the list
+double min_list(Node* &head) {
+    Node* temp = head;
+    double min_element = INT_MAX;
+
+    while (temp != nullptr) {
+        if (min_element > temp->number) { // Update min if a smaller value is found
+            min_element = temp->number;
+        }
+        temp = temp->next;
+    }
+
+    return min_element;
+}
+
+// Check if a number is prime
+bool is_prime(int x) {
+    if (x <= 1) return false; // Handle non-prime cases
+    for (int i = 2; i <= sqrt(x); i++) {
+        if (x % i == 0) { // Check divisibility
+            return false;
+        }
+    }
+    return true;
+}
+
+// Count the number of prime values in the list
+int count_prime_list(Node* &head) {
+    Node* temp = head;
+    int count = 0;
+
+    while (temp != nullptr) {
+        if (is_prime(temp->number)) { // Check if the value is prime
+            count++;
+        }
+        temp = temp->next;
+    }
+
+    return count;
+}
+
+// Swap the values of two nodes
+void swap_values(Node* &ptr1, Node* &ptr2) {
+    int temp = ptr1->number;
+    ptr1->number = ptr2->number;
+    ptr2->number = temp;
+}
+
+// Sort the list in ascending order
+void sort_ascending_list(Node* &head) {
+    for (Node* temp1 = head; temp1 != nullptr; temp1 = temp1->next) {
+        for (Node* temp2 = temp1->next; temp2 != nullptr; temp2 = temp2->next) {
+            if (temp1->number > temp2->number) { // Swap if out of order
+                swap_values(temp1, temp2);
+            }
+        }
+    }
+}
+
+// Sort the list in descending order
+void sort_descending_list(Node* &head) {
+    for (Node* temp1 = head; temp1 != nullptr; temp1 = temp1->next) {
+        for (Node* temp2 = temp1->next; temp2 != nullptr; temp2 = temp2->next) {
+            if (temp1->number < temp2->number) { // Swap if out of order
+                swap_values(temp1, temp2);
+            }
+        }
+    }
+}
+
+// Calculate the Euclidean distance between two lists
+double distance_between_two_lists(Node* &head1, Node* &head2) {
+    Node* temp1 = head1;
+    Node* temp2 = head2;
+
+    double sum = 0;
+
+    while (temp1 != nullptr && temp2 != nullptr) { // Traverse both lists
+        double x = temp1->number;
+        double y = temp2->number;
+        sum += pow(y - x, 2); // Add squared differences
+
+        temp1 = temp1->next;
+        temp2 = temp2->next;
+    }
+
+    return sqrt(sum); // Return the square root of the sum
+}
+
+// Check if a number is a perfect number
+bool is_perfect_number(int x) {
+    int sum = 0;
+
+    for (int i = 1; i <= x / 2; i++) { // Sum divisors
+        if (x % i == 0) {
+            sum += i;
+        }
+    }
+
+    return sum == x; // Check if the sum equals the number
+}
+
+// Print all perfect numbers in the list
+void print_perfect_number(Node* &head) {
+    for (Node* temp = head; temp != nullptr; temp = temp->next) {
+        if (is_perfect_number(temp->number)) { // Check each value
+            cout << temp->number << " ";
+        }
+    }
+    cout << "\n"; // End the line after printing
+}
+
+// Generate a list of the first `n` prime numbers
+Node* generates_prime(int n) {
+    Node* head = NULL;
+    int val = 1;
+
+    while (n--) {
+        bool prime = false;
+
+        while (!prime) { // Increment until a prime is found
+            prime = is_prime(++val);
+        }
+
+        add_back(head, val); // Add prime to the list
+    }
+
+    return head;
+}
+
+// Create a new list based on operations on two input lists
+Node* Fun(Node* &head1, Node* &head2) {
+    Node* temp1 = head1;
+    Node* temp2 = head2;
+    Node* head3 = NULL;
+
+    while (temp1 != nullptr && temp2 != nullptr) { // Traverse both lists
+        double x = temp1->number;
+        double y = temp2->number;
+        int res = pow(y, x); // Calculate y^x
+
+        add_back(head3, res); // Add result to the new list
+
+        temp1 = temp1->next;
+        temp2 = temp2->next;
+    }
+
+    return head3;
+}
+
+// Swap the second halves of two lists
+void swap_half_list(Node* &head1, Node* &head2) {
+    Node* temp1 = head1;
+    Node* temp2 = head2;
+
+    int n1 = size_list(head1) / 2; // Find the midpoint of list 1
+    int n2 = size_list(head2) / 2; // Find the midpoint of list 2
+
+    while (--n1) {
+        temp1 = temp1->next; // Move to the midpoint
+    }
+
+    while (--n2) {
+        temp2 = temp2->next; // Move to the midpoint
+    }
+
+    Node* swap = temp1->next;
+    temp1->next = temp2->next; // Swap the second halves
+    temp2->next = swap;
+}
+
+// Make a list symmetrical by appending its reverse
+void symmetrical_list(Node* &head) {
+    Node* temp;
+    Node* res = NULL;
+
+    for (temp = head; temp != nullptr; temp = temp->next) { // Reverse the list
+        add_front(res, temp->number);
+    }
+
+    temp->next = res; // Append the reversed list
+}
+
+// Solve function for processing input and testing
+void solve() {
+    //My Code
+}
+
+// Main function
+int main() {
+    solve(); // Execute the solution logic
+}
